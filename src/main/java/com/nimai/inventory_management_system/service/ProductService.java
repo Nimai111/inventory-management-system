@@ -1,7 +1,6 @@
 package com.nimai.inventory_management_system.service;
 
-
-
+import com.nimai.inventory_management_system.exception.ProductNotFoundException;
 import com.nimai.inventory_management_system.product.Product;
 import com.nimai.inventory_management_system.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -29,15 +28,24 @@ public class ProductService {
 
     // Get Product By ID
     public Product getProductById(Long id) {
+
         return productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+                .orElseThrow(() ->
+                        new ProductNotFoundException(
+                                "Product not found with id: " + id
+                        )
+                );
     }
 
     // Update Product
     public Product updateProduct(Long id, Product product) {
 
         Product existingProduct = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+                .orElseThrow(() ->
+                        new ProductNotFoundException(
+                                "Product not found with id: " + id
+                        )
+                );
 
         existingProduct.setName(product.getName());
         existingProduct.setDescription(product.getDescription());
@@ -51,7 +59,11 @@ public class ProductService {
     public void deleteProduct(Long id) {
 
         Product existingProduct = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+                .orElseThrow(() ->
+                        new ProductNotFoundException(
+                                "Product not found with id: " + id
+                        )
+                );
 
         productRepository.delete(existingProduct);
     }
